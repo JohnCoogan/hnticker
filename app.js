@@ -45,24 +45,26 @@ var request = require('request')
   , jsdom = require('jsdom').jsdom
   , _und = require('underscore')
   , FETCH_INTERVAL = 5000
-  , sentHeadlines = []
-  , recentPosts = [];
+  , recentPosts = {'news':[], 'newest':[]};
 
-function sendMessage(io, data) {
-  io.sockets.emit('send:message', data);
-  recentPosts.push(data);
+function sendMessage(io, section, data) {
+  io.sockets.emit('send:' + section, data);
+  recentPosts[section].push(data);
 }
 
 // Socket.io Communication
 io.sockets.on('connection', function (socket) {
-  for (var i = 0; i < recentPosts.length; i++) {
-    socket.emit('send:message', recentPosts[i]);
+  var options = ['news','newest'];
+  for (var i = 0; i < options.length; i++) {
+    for (var t = 0; t < recentPosts[options[i]].length; t++) {
+      socket.emit('send:' + options[i], recentPosts[options[i]][t]);
+    };
   };
 });
 
-function getHeadline(io) {
+function getHeadline(io, section) {
   request({
-    uri: "http://news.ycombinator.com/newest",
+    uri: "http://news.ycombinator.com/" + section,
   }, function(error, response, body) {
     var window = jsdom(body).createWindow()
       , $ = require('jquery').create(window);
@@ -71,23 +73,31 @@ function getHeadline(io) {
       , points = $('.subtext span');
       
     $.map(points, function(el, i) {
-          var data = {
-            position: i,
-            points: $(el).text(),
-            text: $(titles[i]).text(),
-            url: $(titles[i]).attr('href'),
-            domain: $(titles[i]).next().text()
-          }
-          if (!_und.contains(sentHeadlines, data.url)) {
-            sendMessage(io, data);
-            sentHeadlines.push(data.url);
-          }
-      });
+      var data = {
+                    position: Number($(titles[i]).parent().parent().children().first().text().replace('.','')),
+                    points: $(el).text(),
+                    text: $(titles[i]).text(),
+                    url: $(titles[i]).attr('href'),
+                    domain: $(titles[i]).next().text()
+                  },
+          matchedPost = _und.findWhere(recentPosts['news'], {'url':data.url});
+      if (!matchedPost) {
+        sendMessage(io, section, data);
+      }
+      if (matchedPost) {
+        var trending = data.position - matchedPost.position;
+        if (trending > 0) {
+          console.log(data);
+          console.log(trending);
+        };
+      };
+    });
   });
 }
 
 var timer = setInterval(function() {
-  getHeadline(io);
+  getHeadline(io, 'newest');
+  getHeadline(io, 'news');
 }, FETCH_INTERVAL);
 
 // Start server

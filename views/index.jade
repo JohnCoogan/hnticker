@@ -7,10 +7,16 @@ block body
     div(ng-controller='AppCtrl')
       .row-fluid
         h3 New Headlines
-      .row-fluid.ticker-item(ng-repeat='message in messages', ng-cloak)
+      .row-fluid(ng-repeat='story in newest', ng-cloak)
+        .span12
+          a(ng-href='{{story.url}}', target="_blank")
+            p.tickerText {{story.text}} {{story.domain}}
+      .row-fluid
+        h3 Top Headlines
+      .row-fluid(ng-repeat='story in topStories | orderBy:"position"', ng-cloak)
         .span12 
-          a(ng-href='{{message.url}}', target="_blank")
-            p.tickerText {{message.text}} {{message.domain}}
+          a(ng-href='{{story.url}}', target="_blank")
+            p.tickerText {{story.position}} | {{story.text}} {{story.domain}}
 
   script(src='js/lib/angular/angular.js')
   script(src='js/lib/underscore-min.js')

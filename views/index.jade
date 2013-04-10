@@ -17,6 +17,7 @@ block body
         .span12 
           a(ng-href='{{story.url}}', target="_blank")
             p.tickerText {{story.position}} | {{story.text}} {{story.domain}}
+            p(ng-show='story.delta') Delta: {{story.delta}}
 
   script(src='js/lib/angular/angular.js')
   script(src='js/lib/underscore-min.js')

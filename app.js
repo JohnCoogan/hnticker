@@ -44,12 +44,14 @@ app.get('*', routes.index);
 var request = require('request')
   , jsdom = require('jsdom').jsdom
   , _und = require('underscore')
-  , FETCH_INTERVAL = 5000
+  , FETCH_INTERVAL = 4000
   , recentPosts = {'news':[], 'newest':[]};
 
 function sendMessage(io, section, data) {
   io.sockets.emit('send:' + section, data);
-  recentPosts[section].push(data);
+  if (section != 'trending') {
+    recentPosts[section].push(data);  
+  }
 }
 
 // Socket.io Communication
@@ -79,18 +81,29 @@ function getHeadline(io, section) {
                     text: $(titles[i]).text(),
                     url: $(titles[i]).attr('href'),
                     domain: $(titles[i]).next().text()
-                  },
-          matchedPost = _und.findWhere(recentPosts['news'], {'url':data.url});
-      if (!matchedPost) {
-        sendMessage(io, section, data);
-      }
-      if (matchedPost) {
-        var trending = data.position - matchedPost.position;
-        if (trending > 0) {
+                  };
+      if (section == 'newest') {
+        var matchedPost = _und.findWhere(recentPosts[section], {'url':data.url});
+        if (!matchedPost) {
+          sendMessage(io, section, data);
+        }
+      } else {
+        if (!_und.isEmpty(recentPosts['news']) && !_und.isUndefined(data)) {
           console.log(data);
-          console.log(trending);
-        };
-      };
+          var matchedPost = _und.findWhere(recentPosts['news'], {'url':data.url});
+        }
+        if (matchedPost) {
+          var delta = data.position - matchedPost.position;
+          if (delta != 0) {
+            console.log(data.text, delta);
+            data.delta = delta;
+            recentPosts['news'] = _und.map(recentPosts['news'], function(s) { if(s.url == data.url) { s = data; }});
+            sendMessage(io, 'trending', data);
+          }
+        } else {
+          sendMessage(io, 'news', data);
+        }
+      }
     });
   });
 }

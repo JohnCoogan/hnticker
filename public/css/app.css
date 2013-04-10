@@ -1,20 +1,12 @@
 /* app css stylesheet */
 
-.overflowable {
-  height: 240px;
-  overflow-y: auto;
-  border: 1px solid #000;
+.ticker-item {
+  -webkit-transition: all .2s ease-in;
+  -moz-transition: all .2s ease-in;
+  -o-transition: all .2s ease-in;
+  transition: all .2s ease-in;
 }
 
-.overflowable p {
-  margin: 0;
-}
-
-.col {
-  float: left;
-  width: 100%;
-}
-
-.clr {
-  clear: both;
+.inactive {
+    display: none;
 }

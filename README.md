@@ -4,8 +4,7 @@ Hacker News Ticker
 A live streaming ticker for Hacker News
 
 
-Install node dependancies
-
+Install node dependancies:
 `npm install`
 
 Run in development:

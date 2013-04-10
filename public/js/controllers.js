@@ -9,7 +9,7 @@ function AppCtrl($scope, socket) {
 
   socket.on('send:message', function (message) {
     $scope.messages.unshift(message);
-    $scope.messages = _.uniq($scope.messages, function(d) { return d.url; });
+    $scope.messages = _.map(_.uniq($scope.messages, function(d) { return d.url; }), function(m, i) { m.index = i; return m; });
   });
 
   $scope.messages = [];

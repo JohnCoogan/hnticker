@@ -1,14 +1,16 @@
 extends layout
 
 block body
-  h1 HN TickerTape
-  div(ng-controller='AppCtrl')
-    .col
-      h3 Headlines
-      .overflowable
-        .tickerItem(ng-repeat='message in messages', ng-cloak)
+  .container-fluid
+    .row-fluid
+      h1 HN TickerTape
+    div(ng-controller='AppCtrl')
+      .row-fluid
+        h3 New Headlines
+      .row-fluid.ticker-item(ng-repeat='message in messages', ng-cloak)
+        .span12 
           a(ng-href='{{message.url}}', target="_blank")
-            p(class='tickerText') {{message.points}}: {{message.text}} {{message.domain}}
+            p.tickerText {{message.text}} {{message.domain}}
 
   script(src='js/lib/angular/angular.js')
   script(src='js/lib/underscore-min.js')

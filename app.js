@@ -46,18 +46,17 @@ var request = require('request')
   , _und = require('underscore')
   , FETCH_INTERVAL = 5000
   , sentHeadlines = []
-  , lastFive = [];
+  , recentPosts = [];
 
 function sendMessage(io, data) {
   io.sockets.emit('send:message', data);
-  lastFive.push(data);
-  lastFive = lastFive.slice(0,5);
+  recentPosts.push(data);
 }
 
 // Socket.io Communication
 io.sockets.on('connection', function (socket) {
-  for (var i = 0; i < lastFive.length; i++) {
-    socket.emit('send:message', lastFive[i]);
+  for (var i = 0; i < recentPosts.length; i++) {
+    socket.emit('send:message', recentPosts[i]);
   };
 });
 

@@ -20,7 +20,12 @@ function AppCtrl($scope, socket) {
   });
 
   socket.on('send:trending', function (data) {
-    console.log(data);
-    $scope.topStories = _.map($scope.topStories, function(s) { if(s.url == data.url) { s = data; }});
+    $scope.topStories = _.map($scope.topStories, 
+        function(s) { 
+          if (s.url == data.url) {
+            s = data;
+          }
+          return s; 
+        });
   });
 }

@@ -4,20 +4,19 @@ block body
   .container-fluid
     .row-fluid
       h1 HN TickerTape
-    div(ng-controller='AppCtrl')
-      .row-fluid
-        h3 New Headlines
-      .row-fluid(ng-repeat='story in newest', ng-cloak)
-        .span12
-          a(ng-href='{{story.url}}', target="_blank")
-            p.tickerText {{story.text}} {{story.domain}}
-      .row-fluid
-        h3 Top Headlines
-      .row-fluid(ng-repeat='story in topStories | orderBy:"position"', ng-cloak)
-        .span12 
-          a(ng-href='{{story.url}}', target="_blank")
-            p.tickerText {{story.position}} | {{story.text}} {{story.domain}}
-            p(ng-show='story.delta') Delta: {{story.delta}}
+      h3 New Headlines
+    div.photobanner(ng-controller='AppCtrl')
+      .ticker-item(ng-repeat='message in newest', ng-cloak)
+        .object-span
+          a(ng-href='{{message.url}}', target="_blank")
+            p.tickerText {{message.text}} {{message.domain}}
+    div.photobanner.two(ng-controller='AppCtrl')
+      .ticker-item.two(ng-repeat='message in topStories', ng-cloak)
+        .object-span
+          a(ng-href='{{message.url}}', target="_blank")
+            p.tickerText(ng-class="message.styling")
+              i.tickerIcon(class="icon-{{message.styling}}")
+              {{message.text}} {{message.domain}}
 
   script(src='js/lib/angular/angular.js')
   script(src='js/lib/underscore-min.js')

@@ -52,6 +52,7 @@ function sendMessage(io, section, data) {
   if (section != 'trending') {
     recentPosts[section].push(data);  
   }
+  return;
 }
 
 // Socket.io Communication
@@ -64,6 +65,16 @@ io.sockets.on('connection', function (socket) {
   };
 });
 
+function getStyling(delta) {
+  if (delta > 0) {
+    return 'arrow-up';
+  } else if (delta < 0) {
+    return 'arrow-down';
+  } else {
+    return 'resize-horizontal';
+  }
+}
+
 function getHeadline(io, section) {
   request({
     uri: "http://news.ycombinator.com/" + section,
@@ -73,14 +84,16 @@ function getHeadline(io, section) {
     
     var titles = $('.title a')
       , points = $('.subtext span');
-      
-    $.map(points, function(el, i) {
+    
+    for (var i = 0; i < points.length; i++) {
       var data = {
                     position: Number($(titles[i]).parent().parent().children().first().text().replace('.','')),
-                    points: $(el).text(),
+                    points: $(points[i]).text(),
                     text: $(titles[i]).text(),
                     url: $(titles[i]).attr('href'),
-                    domain: $(titles[i]).next().text()
+                    domain: $(titles[i]).next().text(),
+                    delta: 0,
+                    styling: 'resize-horizontal'
                   };
       if (section == 'newest') {
         var matchedPost = _und.findWhere(recentPosts[section], {'url':data.url});
@@ -89,23 +102,30 @@ function getHeadline(io, section) {
         }
       } else {
         if (!_und.isEmpty(recentPosts['news']) && !_und.isUndefined(data)) {
-          console.log(data);
           var matchedPost = _und.findWhere(recentPosts['news'], {'url':data.url});
         }
         if (matchedPost) {
           var delta = data.position - matchedPost.position;
           if (delta != 0) {
-            console.log(data.text, delta);
             data.delta = delta;
-            recentPosts['news'] = _und.map(recentPosts['news'], function(s) { if(s.url == data.url) { s = data; }});
+            data.styling = getStyling(delta);
+            recentPosts['news'] = _und.map(recentPosts['news'], 
+              function(s) { 
+                if (s.url == data.url) {
+                  s = data;
+                }
+                return s;
+              });
             sendMessage(io, 'trending', data);
           }
         } else {
           sendMessage(io, 'news', data);
         }
       }
-    });
+    }
+    return;
   });
+  return;
 }
 
 var timer = setInterval(function() {

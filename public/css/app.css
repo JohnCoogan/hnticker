@@ -1,1 +1,136 @@
 /* app css stylesheet */
+a:hover{
+    text-decoration: none !important;
+}
+
+body{
+    overflow-x:hidden;
+}
+.ticker-item {
+  -webkit-transition: all .2s ease-in;
+  -moz-transition: all .2s ease-in;
+  -o-transition: all .2s ease-in;
+  transition: all .2s ease-in;
+}
+
+.tickerIcon {
+  font-size: 20px;
+  margin: 0px 10px 10px;
+  float: left;
+}
+
+.icon-resize-horizontal {
+  color: white;
+}
+
+.inactive {
+    display: none;
+}
+
+/** Photobanner Style **/
+.photobanner {
+    height: 30px;
+    padding-top:10px;
+    width: 16500px;
+    padding-left:70%;
+    background-color: rgb(20,20,20);
+}
+.photobanner.two{
+    background-color: rgb(40,40,40);
+    padding-top:10px;
+}
+.tickerText{
+    font-family: 'Droid Sans Mono', sans-serif;
+    text-decoration:none !important;
+    color:white;
+}
+.tickerText.arrow-up, .icon-arrow-up{
+    color:rgb(87, 173, 104);
+}
+
+.tickerText.arrow-up:hover, .icon-arrow-up:hover{
+     color:rgb(77, 143, 114);
+}
+
+.tickerText.arrow-down, .icon-arrow-down{
+    color:rgb(173, 87, 84);
+}
+
+.tickerText.arrow-down:hover, .icon-arrow-down:hover{
+    color:rgba(153, 67, 94,1);
+}
+
+.tickerText:hover{
+    color:rgb(245,245,245);
+}
+
+.object-span{
+    width:auto;
+}
+
+/*keyframe animations*/
+.photobanner:nth-child(2){
+    -webkit-animation: bannermove 230s linear infinite;
+       -moz-animation: bannermove 230s linear infinite;
+        -ms-animation: bannermove 230s linear infinite;
+         -o-animation: bannermove 230s linear infinite;
+            animation: bannermove 230s linear infinite;
+}
+
+.photobanner.two:nth-child(3){
+    -webkit-animation: bannermove 200s linear infinite;
+       -moz-animation: bannermove 200s linear infinite;
+        -ms-animation: bannermove 200s linear infinite;
+         -o-animation: bannermove 200s linear infinite;
+            animation: bannermove 200s linear infinite;
+}
+ 
+@keyframes "bannermove" {
+ 0% {
+    margin-left: 0px;
+ }
+ 100% {
+    margin-left: -16200px;
+ }
+ 
+}
+ 
+@-moz-keyframes bannermove {
+ 0% {
+   margin-left: 0px;
+ }
+ 100% {
+   margin-left: -16200px;
+ }
+ 
+}
+ 
+@-webkit-keyframes "bannermove" {
+ 0% {
+   margin-left: 0px;
+ }
+ 100% {
+   margin-left: -16200px;
+ }
+ 
+}
+ 
+@-ms-keyframes "bannermove" {
+ 0% {
+   margin-left: 0px;
+ }
+ 100% {
+   margin-left: -16200px;
+ }
+ 
+}
+ 
+@-o-keyframes "bannermove" {
+ 0% {
+   margin-left: 0px;
+ }
+ 100% {
+   margin-left: -16200px;
+ }
+ 
+}
